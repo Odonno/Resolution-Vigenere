@@ -12,7 +12,10 @@
 
         <StackPanel Grid.Row="0">
             <TextBox x:Name="tbText" Text="{Binding Path=VigenereText.Text, UpdateSourceTrigger=PropertyChanged}" Margin="10" Height="70" TextWrapping="Wrap" CharacterCasing="Upper" AcceptsReturn="True" />
-            <TextBox x:Name="tbKeyLength" Text="{Binding Path=VigenereText.KeyLength, UpdateSourceTrigger=PropertyChanged}" Margin="10" Width="50" HorizontalAlignment="Left" />
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="tbKeyLength" Text="{Binding Path=VigenereText.KeyLength, UpdateSourceTrigger=PropertyChanged}" Margin="10" Width="50" HorizontalAlignment="Left" />
+                <TextBox x:Name="tbMargeError" Text="{Binding Path=VigenereText.MargeError, UpdateSourceTrigger=PropertyChanged}" Margin="10" Width="50" HorizontalAlignment="Left" />
+            </StackPanel>
         </StackPanel>
 
         <Button Grid.Row="1" Content="Search key" Height="40" Margin="10" Command="{Binding Path=SearchKeysCommand}" />

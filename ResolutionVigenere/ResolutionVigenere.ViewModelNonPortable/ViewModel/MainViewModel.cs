@@ -87,10 +87,12 @@ namespace ResolutionVigenere.View.ViewModel
 
             var returnedKeys = new List<string>();
             var maxValue = _occurenceList[startKey.Length].LettersOccurence.Max(lo => lo.Value);
-            var letters = _occurenceList[startKey.Length].LettersOccurence.Where(pair => pair.Value == maxValue).Select(pair => pair.Key);
 
-            // TODO : use "marge error" property
-
+            // use "marge error" property to get more possibilities
+            var letters = _occurenceList[startKey.Length].LettersOccurence.
+                Where(pair => pair.Value >= maxValue - VigenereText.MargeError).
+                Select(pair => pair.Key);
+            
             // for each key letter, susbstract 4 (e => a)
             foreach (var l in letters)
             {

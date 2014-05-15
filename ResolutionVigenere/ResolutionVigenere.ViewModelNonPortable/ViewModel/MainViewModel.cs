@@ -23,12 +23,24 @@ namespace ResolutionVigenere.View.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
+        #region Fields
+
         private List<OccurenceLetter> _occurenceList;
+
+        #endregion
+
+
+        #region Properties
 
         private readonly VigenereText _vigenereText = new VigenereText();
         public VigenereText VigenereText { get { return _vigenereText; } }
 
         public ICommand SearchKeysCommand { get; private set; }
+
+        #endregion
+
+
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
@@ -47,10 +59,14 @@ namespace ResolutionVigenere.View.ViewModel
             SearchKeysCommand = new RelayCommand(SearchKeys, CanSearchKeys);
         }
 
+        #endregion
+
+
+        #region Methods
 
         public bool CanSearchKeys()
         {
-            return VigenereText.KeyLength > 0 && !string.IsNullOrWhiteSpace(VigenereText.Text);
+            return VigenereText.KeyLength > 0 && !string.IsNullOrWhiteSpace(VigenereText.Text) && VigenereText.Text.Length > VigenereText.KeyLength;
         }
         public void SearchKeys()
         {
@@ -80,10 +96,13 @@ namespace ResolutionVigenere.View.ViewModel
 
         private IEnumerable<string> GetKeys(string startKey)
         {
+            // Stop case : if the key length is reached
             if (startKey.Length == VigenereText.KeyLength)
                 return new List<string> { startKey };
 
             var returnedKeys = new List<string>();
+
+            // Get the max value of occurence
             var maxValue = _occurenceList[startKey.Length].LettersOccurence.Max(lo => lo.Value);
 
             // use "marge error" property to get more possibilities
@@ -99,6 +118,7 @@ namespace ResolutionVigenere.View.ViewModel
                     valueLetter += 26;
                 char letter = (char)(valueLetter + 'A');
 
+                // Get all possible keys from the recursive function
                 returnedKeys.AddRange(GetKeys(startKey + letter));
             }
 
@@ -118,11 +138,15 @@ namespace ResolutionVigenere.View.ViewModel
             for (int i = 0; i < VigenereText.KeyLength; i++)
                 seriesBuilder.Add(new StringBuilder());
 
+            // Add letters of each serie
             for (int i = 0; i < text.Length; i++)
                 seriesBuilder[i % VigenereText.KeyLength].Append(text[i].ToString());
 
+            // Get the generated strings from series
             series.AddRange(seriesBuilder.Select(t => t.ToString()));
             return series;
         }
+
+        #endregion
     }
 }

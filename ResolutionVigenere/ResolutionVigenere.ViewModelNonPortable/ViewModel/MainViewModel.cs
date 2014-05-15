@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
 using ResolutionVigenere.Model;
@@ -109,10 +110,13 @@ namespace ResolutionVigenere.View.ViewModel
 
         private IEnumerable<string> GetSeries()
         {
-            // TODO : use a regex to only care "A-Z"
-            var text = VigenereText.Text.ToUpper().Replace(" ", "");
+            var text = VigenereText.Text.ToUpper();
             var series = new List<string>(VigenereText.KeyLength);
             var seriesBuilder = new List<StringBuilder>(VigenereText.KeyLength);
+
+            // use a regex to only care "A-Z"
+            var myRegex = new Regex("[^A-Z]");
+            text = myRegex.Replace(text, "");
 
             for (int i = 0; i < VigenereText.KeyLength; i++)
                 seriesBuilder.Add(new StringBuilder());

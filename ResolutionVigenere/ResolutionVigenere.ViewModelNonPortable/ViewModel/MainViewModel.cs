@@ -104,7 +104,21 @@ namespace ResolutionVigenere.View.ViewModel
         }
         public void Decrypt()
         {
-            throw new NotImplementedException();
+            var clearedTextBuilder = new StringBuilder();
+            int i = 0;
+
+            foreach (char cryptedLetter in VigenereText.CryptedText)
+            {
+                int valueLetter = (cryptedLetter - VigenereText.SelectedKey[i]) % 26;
+                if (valueLetter < 0)
+                    valueLetter += 26;
+                char clearedLetter = (char)(valueLetter + 'A');
+
+                clearedTextBuilder.Append(clearedLetter);
+                i = ++i % VigenereText.KeyLength;
+            }
+
+            VigenereText.ClearedText = clearedTextBuilder.ToString();
         }
 
 

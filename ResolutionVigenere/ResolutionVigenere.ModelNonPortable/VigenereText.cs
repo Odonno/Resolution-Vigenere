@@ -5,11 +5,11 @@ namespace ResolutionVigenere.ModelNonPortable
 {
     public class VigenereText : INotifyPropertyChanged
     {
-        private string _text;
-        public string Text
+        private string _cryptedText;
+        public string CryptedText
         {
-            get { return _text; }
-            set { _text = value; RaisePropertyChanged("Text"); }
+            get { return _cryptedText; }
+            set { _cryptedText = value; RaisePropertyChanged("CryptedText"); }
         }
 
         private int _keyLength;
@@ -24,6 +24,20 @@ namespace ResolutionVigenere.ModelNonPortable
         {
             get { return _margeError; }
             set { _margeError = value; RaisePropertyChanged("MargeError"); }
+        }
+
+        private string _selectedKey;
+        public string SelectedKey
+        {
+            get { return _selectedKey; }
+            set { _selectedKey = value; RaisePropertyChanged("SelectedKey"); }
+        }
+
+        private string _clearedText;
+        public string ClearedText
+        {
+            get { return _clearedText; }
+            set { _clearedText = value; RaisePropertyChanged("ClearedText"); }
         }
 
         private readonly ObservableCollection<string> _potentialKeys = new ObservableCollection<string>();

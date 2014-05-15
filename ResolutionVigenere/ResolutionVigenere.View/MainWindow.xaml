@@ -9,6 +9,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Margin="10">
@@ -18,9 +20,9 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             
-            <TextBlock Grid.Row="0" Text="Text :" Margin="0 10" />
+            <TextBlock Grid.Row="0" Text="Crypted text :" Margin="0 10" />
             
-            <TextBox Grid.Row="1" x:Name="tbText" Text="{Binding Path=VigenereText.Text, UpdateSourceTrigger=PropertyChanged}"
+            <TextBox Grid.Row="1" x:Name="tbCryptedText" Text="{Binding Path=VigenereText.CryptedText, UpdateSourceTrigger=PropertyChanged}"
                      TextWrapping="Wrap" CharacterCasing="Upper" AcceptsReturn="True" />
             
             <StackPanel Grid.Row="2" Orientation="Horizontal">
@@ -35,11 +37,27 @@
 
         <Button Grid.Row="1" Content="Search key" Height="40" Margin="10" Command="{Binding Path=SearchKeysCommand}" />
 
-        <ListBox Grid.Row="2" x:Name="lbPotentialKeys" Margin="10" ItemsSource="{Binding Path=VigenereText.PotentialKeys}" />
+        <ListBox Grid.Row="2" x:Name="lbPotentialKeys" Margin="10"
+                 ItemsSource="{Binding Path=VigenereText.PotentialKeys}"
+                 SelectedItem="{Binding Path=VigenereText.SelectedKey}"/>
         
         <TextBlock Grid.Row="3" Margin="10">
             <Run Text="{Binding ElementName=lbPotentialKeys, Path=Items.Count, Mode=OneWay}" />
             <Run Text="potential key(s)" />
         </TextBlock>
+
+        <Button Grid.Row="4" Content="Decrypt" Height="40" Margin="10" Command="{Binding Path=DecryptCommand}" />
+        
+        <Grid Grid.Row="5" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="Cleared text :" Margin="0 10" />
+
+            <TextBox Grid.Row="1" x:Name="tbClearedText" Text="{Binding Path=VigenereText.ClearedText, UpdateSourceTrigger=PropertyChanged}"
+                     TextWrapping="Wrap" CharacterCasing="Upper" AcceptsReturn="True" />
+        </Grid>
     </Grid>
 </Window>

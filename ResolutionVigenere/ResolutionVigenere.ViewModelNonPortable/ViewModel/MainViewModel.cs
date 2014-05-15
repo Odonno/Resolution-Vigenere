@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -36,6 +37,7 @@ namespace ResolutionVigenere.View.ViewModel
         public VigenereText VigenereText { get { return _vigenereText; } }
 
         public ICommand SearchKeysCommand { get; private set; }
+        public ICommand DecryptCommand { get; private set; }
 
         #endregion
 
@@ -57,6 +59,7 @@ namespace ResolutionVigenere.View.ViewModel
             ////}
 
             SearchKeysCommand = new RelayCommand(SearchKeys, CanSearchKeys);
+            DecryptCommand = new RelayCommand(Decrypt, CanDecrypt);
         }
 
         #endregion
@@ -66,7 +69,7 @@ namespace ResolutionVigenere.View.ViewModel
 
         public bool CanSearchKeys()
         {
-            return VigenereText.KeyLength > 0 && !string.IsNullOrWhiteSpace(VigenereText.Text) && VigenereText.Text.Length > VigenereText.KeyLength;
+            return VigenereText.KeyLength > 0 && !string.IsNullOrWhiteSpace(VigenereText.CryptedText) && VigenereText.CryptedText.Length > VigenereText.KeyLength;
         }
         public void SearchKeys()
         {
@@ -94,6 +97,17 @@ namespace ResolutionVigenere.View.ViewModel
                 VigenereText.PotentialKeys.Add(key);
         }
 
+
+        public bool CanDecrypt()
+        {
+            return !string.IsNullOrWhiteSpace(VigenereText.CryptedText) && !string.IsNullOrWhiteSpace(VigenereText.SelectedKey);
+        }
+        public void Decrypt()
+        {
+            throw new NotImplementedException();
+        }
+
+
         private IEnumerable<string> GetKeys(string startKey)
         {
             // Stop case : if the key length is reached
@@ -109,7 +123,7 @@ namespace ResolutionVigenere.View.ViewModel
             var letters = _occurenceList[startKey.Length].LettersOccurence.
                 Where(pair => pair.Value >= maxValue - VigenereText.MargeError).
                 Select(pair => pair.Key);
-            
+
             // for each key letter, susbstract 4 (e => a)
             foreach (var l in letters)
             {
@@ -127,7 +141,7 @@ namespace ResolutionVigenere.View.ViewModel
 
         private IEnumerable<string> GetSeries()
         {
-            var text = VigenereText.Text.ToUpper();
+            var text = VigenereText.CryptedText.ToUpper();
             var series = new List<string>(VigenereText.KeyLength);
             var seriesBuilder = new List<StringBuilder>(VigenereText.KeyLength);
 

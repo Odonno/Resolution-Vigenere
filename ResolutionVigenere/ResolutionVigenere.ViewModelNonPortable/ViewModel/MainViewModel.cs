@@ -23,6 +23,8 @@ namespace ResolutionVigenere.View.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
+        private List<OccurenceLetter> _occurenceList;
+
         private readonly VigenereText _vigenereText = new VigenereText();
         public VigenereText VigenereText { get { return _vigenereText; } }
 
@@ -45,6 +47,7 @@ namespace ResolutionVigenere.View.ViewModel
             SearchKeysCommand = new RelayCommand(SearchKeys, CanSearchKeys);
         }
 
+
         public bool CanSearchKeys()
         {
             return VigenereText.KeyLength > 0 && !string.IsNullOrWhiteSpace(VigenereText.Text);
@@ -53,9 +56,9 @@ namespace ResolutionVigenere.View.ViewModel
         {
             VigenereText.PotentialKeys = new List<string>();
 
-            var occurenceList = new List<OccurenceLetter>(VigenereText.KeyLength);
+            _occurenceList = new List<OccurenceLetter>(VigenereText.KeyLength);
             for (int i = 0; i < VigenereText.KeyLength; i++)
-                occurenceList.Add(new OccurenceLetter());
+                _occurenceList.Add(new OccurenceLetter());
 
             // Get occurence list of each serie
             int j = 0;
@@ -63,31 +66,49 @@ namespace ResolutionVigenere.View.ViewModel
             foreach (var serie in GetSeries())
             {
                 foreach (char letter in serie)
-                    occurenceList[j].LettersOccurence[letter]++;
+                    _occurenceList[j].LettersOccurence[letter]++;
 
                 j++;
             }
 
             // Get the potential keys from these lists
-            var keyBuilder = new StringBuilder();
-            foreach (var occurenceLetter in occurenceList)
+            var keys = GetKeys("");
+
+            foreach (var key in keys)
+                VigenereText.PotentialKeys.Add(key);
+
+            int y = 0;
+        }
+
+        private IEnumerable<string> GetKeys(string startKey)
+        {
+            if (startKey.Length == VigenereText.KeyLength)
+                return new List<string> { startKey };
+
+            var returnedKeys = new List<string>();
+            var maxValue = _occurenceList[startKey.Length].LettersOccurence.Max(lo => lo.Value);
+            var letters = _occurenceList[startKey.Length].LettersOccurence.Where(pair => pair.Value == maxValue).Select(pair => pair.Key);
+
+            // TODO : use "marge error" property
+
+            // for each key letter, susbstract 4 (e => a)
+            foreach (var l in letters)
             {
-                var maxValue = occurenceLetter.LettersOccurence.Max(lo => lo.Value);
-                char letter = occurenceLetter.LettersOccurence.FirstOrDefault(pair => pair.Value == maxValue).Key;
+                int valueLetter = (l - 'A' - 4) % 26;
+                if (valueLetter < 0)
+                    valueLetter += 26;
+                char letter = (char)(valueLetter + 'A');
 
-                // for each key letter, susbstract 4 (e => a)
-                int valueLetter = (letter - 'a' - 4) % 26;
-                letter = (char)(valueLetter + 'a');
-
-                keyBuilder.Append(letter);
+                returnedKeys.AddRange(GetKeys(startKey + letter));
             }
 
-            VigenereText.PotentialKeys.Add(keyBuilder.ToString());
+            return returnedKeys;
         }
 
         private IEnumerable<string> GetSeries()
         {
-            var text = VigenereText.Text.ToUpper();
+            // TODO : use a regex to only care "A-Z"
+            var text = VigenereText.Text.ToUpper().Replace(" ", "");
             var series = new List<string>(VigenereText.KeyLength);
             var seriesBuilder = new List<StringBuilder>(VigenereText.KeyLength);
 
@@ -95,7 +116,7 @@ namespace ResolutionVigenere.View.ViewModel
                 seriesBuilder.Add(new StringBuilder());
 
             for (int i = 0; i < text.Length; i++)
-                seriesBuilder[i%VigenereText.KeyLength].Append(text[i].ToString());
+                seriesBuilder[i % VigenereText.KeyLength].Append(text[i].ToString());
 
             series.AddRange(seriesBuilder.Select(t => t.ToString()));
             return series;

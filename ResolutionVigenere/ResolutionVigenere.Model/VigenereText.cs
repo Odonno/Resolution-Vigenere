@@ -26,6 +26,8 @@ namespace ResolutionVigenere.Model
             set { _potentialKeys = value; RaisePropertyChanged("PotentialKeys"); }
         }
 
+        // TODO : Add a "marge error" property
+
 
         #region PropertyChanged implementation
 

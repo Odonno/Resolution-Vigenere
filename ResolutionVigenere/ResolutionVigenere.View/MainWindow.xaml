@@ -11,7 +11,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0">
-            <TextBox x:Name="tbText" Text="{Binding Path=VigenereText.Text, UpdateSourceTrigger=PropertyChanged}" Margin="10" Height="70" />
+            <TextBox x:Name="tbText" Text="{Binding Path=VigenereText.Text, UpdateSourceTrigger=PropertyChanged}" Margin="10" Height="70" TextWrapping="Wrap" CharacterCasing="Upper" AcceptsReturn="True" />
             <TextBox x:Name="tbKeyLength" Text="{Binding Path=VigenereText.KeyLength, UpdateSourceTrigger=PropertyChanged}" Margin="10" Width="50" HorizontalAlignment="Left" />
         </StackPanel>
 

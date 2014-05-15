@@ -1,5 +1,5 @@
-using GalaSoft.MvvmLight;
 using ResolutionVigenere.Model;
+using ResolutionVigenere.ViewModel.ViewModel;
 
 namespace ResolutionVigenere.View.ViewModel
 {
@@ -17,7 +17,8 @@ namespace ResolutionVigenere.View.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
-        public VigenereText VigenereText { get; set; }
+        private readonly VigenereText _vigenereText = new VigenereText();
+        public VigenereText VigenereText { get { return _vigenereText; } }
 
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.

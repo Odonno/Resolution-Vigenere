@@ -8,6 +8,6 @@
     xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModel="clr-namespace:ResolutionVigenere.View.ViewModel;assembly=ResolutionVigenere.ViewModel">
   <Application.Resources>
-    <viewModel:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
+    <viewModel:MainViewModel x:Key="Main" d:IsDataSource="True" />
   </Application.Resources>
 </Application>

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ResolutionVigenere.Model
+namespace ResolutionVigenere.ModelNonPortable
 {
     public class OccurenceLetter
     {

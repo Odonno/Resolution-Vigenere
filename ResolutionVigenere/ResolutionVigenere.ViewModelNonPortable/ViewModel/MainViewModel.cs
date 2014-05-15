@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
-using ResolutionVigenere.Model;
+using ResolutionVigenere.ModelNonPortable;
 using ResolutionVigenere.ViewModelNonPortable.ViewModel;
 
 namespace ResolutionVigenere.View.ViewModel
@@ -55,7 +54,7 @@ namespace ResolutionVigenere.View.ViewModel
         }
         public void SearchKeys()
         {
-            VigenereText.PotentialKeys = new List<string>();
+            VigenereText.PotentialKeys.Clear();
 
             _occurenceList = new List<OccurenceLetter>(VigenereText.KeyLength);
             for (int i = 0; i < VigenereText.KeyLength; i++)
@@ -77,8 +76,6 @@ namespace ResolutionVigenere.View.ViewModel
 
             foreach (var key in keys)
                 VigenereText.PotentialKeys.Add(key);
-
-            int y = 0;
         }
 
         private IEnumerable<string> GetKeys(string startKey)

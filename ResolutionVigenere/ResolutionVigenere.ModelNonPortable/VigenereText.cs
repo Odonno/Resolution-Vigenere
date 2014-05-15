@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 
-namespace ResolutionVigenere.Model
+namespace ResolutionVigenere.ModelNonPortable
 {
     public class VigenereText : INotifyPropertyChanged
     {
@@ -19,19 +19,15 @@ namespace ResolutionVigenere.Model
             set { _keyLength = value; RaisePropertyChanged("KeyLength"); }
         }
 
-        private IList<string> _potentialKeys;
-        public IList<string> PotentialKeys
-        {
-            get { return _potentialKeys; }
-            set { _potentialKeys = value; RaisePropertyChanged("PotentialKeys"); }
-        }
-
         private int _margeError;
         public int MargeError
         {
             get { return _margeError; }
             set { _margeError = value; RaisePropertyChanged("MargeError"); }
         }
+
+        private readonly ObservableCollection<string> _potentialKeys = new ObservableCollection<string>();
+        public ObservableCollection<string> PotentialKeys { get { return _potentialKeys; }}
 
 
         #region PropertyChanged implementation

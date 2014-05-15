@@ -95,9 +95,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ResolutionVigenere.Model\ResolutionVigenere.Model.csproj">
-      <Project>{156ce63e-b4a3-430e-b55e-129e527196e5}</Project>
-      <Name>ResolutionVigenere.Model</Name>
+    <ProjectReference Include="..\ResolutionVigenere.ModelNonPortable\ResolutionVigenere.ModelNonPortable.csproj">
+      <Project>{e8af7a9d-3343-446d-8228-8c19fee54202}</Project>
+      <Name>ResolutionVigenere.ModelNonPortable</Name>
     </ProjectReference>
     <ProjectReference Include="..\ResolutionVigenere.ViewModelNonPortable\ResolutionVigenere.ViewModelNonPortable.csproj">
       <Project>{86b74467-80af-4223-b8a4-9ff2f4dcae6d}</Project>

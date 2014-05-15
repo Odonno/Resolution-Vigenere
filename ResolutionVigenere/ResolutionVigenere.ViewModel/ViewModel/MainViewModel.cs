@@ -1,3 +1,6 @@
+using System;
+using System.Windows.Input;
+using GalaSoft.MvvmLight.Command;
 using ResolutionVigenere.Model;
 using ResolutionVigenere.ViewModel.ViewModel;
 
@@ -20,6 +23,8 @@ namespace ResolutionVigenere.View.ViewModel
         private readonly VigenereText _vigenereText = new VigenereText();
         public VigenereText VigenereText { get { return _vigenereText; } }
 
+        public ICommand SearchKeysCommand { get; private set; }
+
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
@@ -33,6 +38,17 @@ namespace ResolutionVigenere.View.ViewModel
             ////{
             ////    // Code runs "for real"
             ////}
+
+            SearchKeysCommand = new RelayCommand(SearchKeys, CanSearchKeys);
+        }
+
+        public bool CanSearchKeys()
+        {
+            return VigenereText.KeyLength > 0 && !string.IsNullOrWhiteSpace(VigenereText.Text);
+        }
+        public void SearchKeys()
+        {
+            throw new NotImplementedException();
         }
     }
 }

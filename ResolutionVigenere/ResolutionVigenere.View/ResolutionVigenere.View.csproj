@@ -99,9 +99,9 @@
       <Project>{156ce63e-b4a3-430e-b55e-129e527196e5}</Project>
       <Name>ResolutionVigenere.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ResolutionVigenere.ViewModel\ResolutionVigenere.ViewModel.csproj">
-      <Project>{6d4b44b8-9d63-4e5c-a77b-f8710b9101aa}</Project>
-      <Name>ResolutionVigenere.ViewModel</Name>
+    <ProjectReference Include="..\ResolutionVigenere.ViewModelNonPortable\ResolutionVigenere.ViewModelNonPortable.csproj">
+      <Project>{86b74467-80af-4223-b8a4-9ff2f4dcae6d}</Project>
+      <Name>ResolutionVigenere.ViewModelNonPortable</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

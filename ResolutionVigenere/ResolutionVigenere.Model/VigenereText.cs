@@ -1,22 +1,29 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace ResolutionVigenere.Model
 {
     public class VigenereText : INotifyPropertyChanged
     {
         private string _text;
-        public string Text { get { return _text; } set { _text = value; RaisePropertyChanged(); } }
+        public string Text
+        {
+            get { return _text; }
+            set { _text = value; RaisePropertyChanged("Text"); }
+        }
 
         private int _keyLength;
-        public int KeyLength { get { return _keyLength; } set { _keyLength = value; RaisePropertyChanged(); } }
+        public int KeyLength
+        {
+            get { return _keyLength; }
+            set { _keyLength = value; RaisePropertyChanged("KeyLength"); }
+        }
 
-        private ObservableCollection<string> _potentialKeys = new ObservableCollection<string>();
-        public ObservableCollection<string> PotentialKeys
+        private IList<string> _potentialKeys;
+        public IList<string> PotentialKeys
         {
             get { return _potentialKeys; }
-            set { _potentialKeys = value; }
+            set { _potentialKeys = value; RaisePropertyChanged("PotentialKeys"); }
         }
 
 
@@ -24,7 +31,7 @@ namespace ResolutionVigenere.Model
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void RaisePropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void RaisePropertyChanged(string propertyName)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));

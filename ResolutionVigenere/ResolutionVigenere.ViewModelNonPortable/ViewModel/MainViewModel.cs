@@ -181,11 +181,17 @@ namespace ResolutionVigenere.View.ViewModel
         }
         public void Decrypt()
         {
+            string cryptedText = VigenereText.CryptedText.ToUpper();
+
+            // use a regex to only care "A-Z"
+            var myRegex = new Regex("[^A-Z]");
+            cryptedText = myRegex.Replace(cryptedText, "");
+
             // for each letter, we search the cleared letter from crypted AND key letter
             var clearedTextBuilder = new StringBuilder();
             int i = 0;
 
-            foreach (char cryptedLetter in VigenereText.CryptedText)
+            foreach (char cryptedLetter in cryptedText)
             {
                 int valueLetter = (cryptedLetter - SelectedKey[i]) % 26;
                 if (valueLetter < 0)

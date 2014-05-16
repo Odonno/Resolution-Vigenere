@@ -6,8 +6,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     d1p1:Ignorable="d" 
     xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModel="clr-namespace:ResolutionVigenere.View.ViewModel;assembly=ResolutionVigenere.ViewModelNonPortable">
-  <Application.Resources>
+    xmlns:viewModel="clr-namespace:ResolutionVigenere.View.ViewModel;assembly=ResolutionVigenere.ViewModelNonPortable"
+    xmlns:converters="clr-namespace:ResolutionVigenere.View.Converters">
+    <Application.Resources>
         <viewModel:MainViewModel x:Key="Main" d:IsDataSource="True" />
+        <converters:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
     </Application.Resources>
 </Application>

@@ -28,8 +28,11 @@
             <StackPanel Grid.Row="2" Orientation="Horizontal">
                 <TextBlock Text="Knowing key length ?" Margin="10" />
                 <CheckBox IsChecked="{Binding Path=KnowingKeyLength}" VerticalAlignment="Center" />
-                <TextBlock Text="Marge error detection key length (0-100) :" Margin="10" />
-                <TextBox x:Name="tbMargeErrorDetectionKeyLength" Text="{Binding Path=MargeErrorDetectionKeyLength, UpdateSourceTrigger=PropertyChanged}" 
+                <TextBlock Text="Marge error detection key length (0-100) :" Margin="10"
+                           Visibility="{Binding Path=KnowingKeyLength, Converter={StaticResource BooleanVisibilityConverter}, ConverterParameter=inverse}" />
+                <TextBox x:Name="tbMargeErrorDetectionKeyLength" 
+                         Text="{Binding Path=MargeErrorDetectionKeyLength, UpdateSourceTrigger=PropertyChanged}" 
+                         Visibility="{Binding Path=KnowingKeyLength, Converter={StaticResource BooleanVisibilityConverter}, ConverterParameter=inverse}"
                          Margin="0 10" Width="50" HorizontalAlignment="Left" />
                 <TextBlock Text="Key length :" Margin="10" />
                 <TextBox x:Name="tbKeyLength" Text="{Binding Path=VigenereText.KeyLength, UpdateSourceTrigger=PropertyChanged}" 

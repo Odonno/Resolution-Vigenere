@@ -12,32 +12,11 @@ namespace ResolutionVigenere.ModelNonPortable
             set { _cryptedText = value; RaisePropertyChanged("CryptedText"); }
         }
 
-        private bool _knowingKeyLength;
-        public bool KnowingKeyLength
-        {
-            get { return _knowingKeyLength; }
-            set { _knowingKeyLength = value; RaisePropertyChanged("KnowingKeyLength"); }
-        }
-
         private int _keyLength;
         public int KeyLength
         {
             get { return _keyLength; }
             set { _keyLength = value; RaisePropertyChanged("KeyLength"); }
-        }
-
-        private int _margeError;
-        public int MargeError
-        {
-            get { return _margeError; }
-            set { _margeError = value; RaisePropertyChanged("MargeError"); }
-        }
-
-        private string _selectedKey;
-        public string SelectedKey
-        {
-            get { return _selectedKey; }
-            set { _selectedKey = value; RaisePropertyChanged("SelectedKey"); }
         }
 
         private string _clearedText;

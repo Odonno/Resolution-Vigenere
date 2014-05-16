@@ -1,7 +1,7 @@
 ﻿<Window x:Class="ResolutionVigenere.View.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Vigenere Resolution" Height="600" Width="800"
+        Title="Vigenere Resolution" Height="700" Width="1000"
         DataContext="{Binding Source={StaticResource Main}}">
     <Grid>
         <Grid.RowDefinitions>
@@ -27,12 +27,15 @@
             
             <StackPanel Grid.Row="2" Orientation="Horizontal">
                 <TextBlock Text="Knowing key length ?" Margin="10" />
-                <CheckBox IsChecked="{Binding Path=VigenereText.KnowingKeyLength}" VerticalAlignment="Center" />
+                <CheckBox IsChecked="{Binding Path=KnowingKeyLength}" VerticalAlignment="Center" />
+                <TextBlock Text="Marge error detection key length (0-100) :" Margin="10" />
+                <TextBox x:Name="tbMargeErrorDetectionKeyLength" Text="{Binding Path=MargeErrorDetectionKeyLength, UpdateSourceTrigger=PropertyChanged}" 
+                         Margin="0 10" Width="50" HorizontalAlignment="Left" />
                 <TextBlock Text="Key length :" Margin="10" />
                 <TextBox x:Name="tbKeyLength" Text="{Binding Path=VigenereText.KeyLength, UpdateSourceTrigger=PropertyChanged}" 
                          Margin="0 10" Width="50" HorizontalAlignment="Left" />
-                <TextBlock Text="Marge error :" Margin="10" />
-                <TextBox x:Name="tbMargeError" Text="{Binding Path=VigenereText.MargeError, UpdateSourceTrigger=PropertyChanged}" 
+                <TextBlock Text="Marge error detection key (0-10) :" Margin="10" />
+                <TextBox x:Name="tbMargeErrorDetectionKey" Text="{Binding Path=MargeErrorDetectionKey, UpdateSourceTrigger=PropertyChanged}" 
                          Margin="0 10" Width="50" HorizontalAlignment="Left" />
             </StackPanel>
         </Grid>
@@ -41,7 +44,7 @@
 
         <ListBox Grid.Row="2" x:Name="lbPotentialKeys" Margin="10"
                  ItemsSource="{Binding Path=VigenereText.PotentialKeys}"
-                 SelectedItem="{Binding Path=VigenereText.SelectedKey}"/>
+                 SelectedItem="{Binding Path=SelectedKey}"/>
         
         <TextBlock Grid.Row="3" Margin="10">
             <Run Text="{Binding ElementName=lbPotentialKeys, Path=Items.Count, Mode=OneWay}" />

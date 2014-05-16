@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
@@ -36,6 +37,54 @@ namespace ResolutionVigenere.View.ViewModel
         private readonly VigenereText _vigenereText = new VigenereText();
         public VigenereText VigenereText { get { return _vigenereText; } }
 
+        private bool _knowingKeyLength;
+        public bool KnowingKeyLength
+        {
+            get { return _knowingKeyLength; }
+            set { _knowingKeyLength = value; RaisePropertyChanged("KnowingKeyLength"); }
+        }
+
+        private string _selectedKey;
+        public string SelectedKey
+        {
+            get { return _selectedKey; }
+            set { _selectedKey = value; RaisePropertyChanged("SelectedKey"); }
+        }
+
+        private int _margeErrorDetectionKeyLength = 5;
+        public int MargeErrorDetectionKeyLength
+        {
+            get { return _margeErrorDetectionKeyLength; }
+            set
+            {
+                if (value < 0)
+                    _margeErrorDetectionKeyLength = 0;
+                else if (value > 100)
+                    _margeErrorDetectionKeyLength = 100;
+                else
+                    _margeErrorDetectionKeyLength = value;
+
+                RaisePropertyChanged("MargeErrorDetectionKey");
+            }
+        }
+
+        private int _margeErrorDetectionKey;
+        public int MargeErrorDetectionKey
+        {
+            get { return _margeErrorDetectionKey; }
+            set
+            {
+                if (value < 0)
+                    _margeErrorDetectionKey = 0;
+                else if (value > 10)
+                    _margeErrorDetectionKey = 10;
+                else
+                    _margeErrorDetectionKey = value;
+
+                RaisePropertyChanged("MargeErrorDetectionKey");
+            }
+        }
+
         public ICommand SearchKeysCommand { get; private set; }
         public ICommand DecryptCommand { get; private set; }
 
@@ -69,19 +118,31 @@ namespace ResolutionVigenere.View.ViewModel
 
         public bool CanSearchKeys()
         {
-            if (VigenereText.KnowingKeyLength && VigenereText.KeyLength <= 0)
+            if (KnowingKeyLength && VigenereText.KeyLength <= 0)
                 return false;
 
             return !string.IsNullOrWhiteSpace(VigenereText.CryptedText) && VigenereText.CryptedText.Length > VigenereText.KeyLength;
         }
         public void SearchKeys()
         {
-            if (!VigenereText.KnowingKeyLength)
+            string cryptedText = VigenereText.CryptedText.ToUpper();
+
+            // use a regex to only care "A-Z"
+            var myRegex = new Regex("[^A-Z]");
+            cryptedText = myRegex.Replace(cryptedText, "");
+
+            if (!KnowingKeyLength)
             {
                 // Step 1 : Get the probably length of the key (if we don't know it)
 
                 // Get the "espace repetition" on the crypted text
-                var espaceRepetitions = GetEspacesRepetition(VigenereText.CryptedText);
+                var espaceRepetitions = GetEspacesRepetition(cryptedText);
+
+                // fixbug by taking the "most seen values" in "espaceRepetitions" variable
+                int avgEspaceRepetitions = espaceRepetitions.Count * MargeErrorDetectionKeyLength / 100;
+                espaceRepetitions = (from n in espaceRepetitions
+                                     where espaceRepetitions.Count(e => e == n) >= avgEspaceRepetitions
+                                     select n).Distinct().ToList();
 
                 // Get the PGCD on all of these values - that's the KeyLength
                 VigenereText.KeyLength = PGCD(espaceRepetitions);
@@ -98,7 +159,7 @@ namespace ResolutionVigenere.View.ViewModel
             // Step 2a : Get occurence list of each serie
             int j = 0;
 
-            foreach (var serie in GetSeries())
+            foreach (var serie in GetSeries(cryptedText))
             {
                 foreach (char letter in serie)
                     _occurenceList[j].LettersOccurence[letter]++;
@@ -116,7 +177,7 @@ namespace ResolutionVigenere.View.ViewModel
 
         public bool CanDecrypt()
         {
-            return !string.IsNullOrWhiteSpace(VigenereText.CryptedText) && !string.IsNullOrWhiteSpace(VigenereText.SelectedKey);
+            return !string.IsNullOrWhiteSpace(VigenereText.CryptedText) && !string.IsNullOrWhiteSpace(SelectedKey);
         }
         public void Decrypt()
         {
@@ -126,7 +187,7 @@ namespace ResolutionVigenere.View.ViewModel
 
             foreach (char cryptedLetter in VigenereText.CryptedText)
             {
-                int valueLetter = (cryptedLetter - VigenereText.SelectedKey[i]) % 26;
+                int valueLetter = (cryptedLetter - SelectedKey[i]) % 26;
                 if (valueLetter < 0)
                     valueLetter += 26;
                 char clearedLetter = (char)(valueLetter + 'A');
@@ -148,7 +209,7 @@ namespace ResolutionVigenere.View.ViewModel
                 {
                     string possibleRepetition = cryptedText.Substring(j, i);
 
-                    var repetitions = cryptedText.Split(new[] {possibleRepetition}, StringSplitOptions.RemoveEmptyEntries);
+                    var repetitions = cryptedText.Split(new[] { possibleRepetition }, StringSplitOptions.RemoveEmptyEntries);
                     if (repetitions.Count() > 2)
                         espaceRepetitions.Add(repetitions[1].Length + i);
                 }
@@ -204,7 +265,7 @@ namespace ResolutionVigenere.View.ViewModel
 
             // use "marge error" property to get more possibilities
             var letters = _occurenceList[startKey.Length].LettersOccurence.
-                Where(pair => pair.Value >= maxValue - VigenereText.MargeError).
+                Where(pair => pair.Value > 0 && pair.Value >= maxValue - MargeErrorDetectionKey).
                 Select(pair => pair.Key);
 
             // for each key letter, susbstract 4 (e => a)
@@ -222,22 +283,17 @@ namespace ResolutionVigenere.View.ViewModel
             return returnedKeys;
         }
 
-        private IEnumerable<string> GetSeries()
+        private IEnumerable<string> GetSeries(string cryptedText)
         {
-            var text = VigenereText.CryptedText.ToUpper();
             var series = new List<string>(VigenereText.KeyLength);
             var seriesBuilder = new List<StringBuilder>(VigenereText.KeyLength);
-
-            // use a regex to only care "A-Z"
-            var myRegex = new Regex("[^A-Z]");
-            text = myRegex.Replace(text, "");
 
             for (int i = 0; i < VigenereText.KeyLength; i++)
                 seriesBuilder.Add(new StringBuilder());
 
             // Add letters of each serie
-            for (int i = 0; i < text.Length; i++)
-                seriesBuilder[i % VigenereText.KeyLength].Append(text[i].ToString());
+            for (int i = 0; i < cryptedText.Length; i++)
+                seriesBuilder[i % VigenereText.KeyLength].Append(cryptedText[i].ToString());
 
             // Get the generated strings from series
             series.AddRange(seriesBuilder.Select(t => t.ToString()));

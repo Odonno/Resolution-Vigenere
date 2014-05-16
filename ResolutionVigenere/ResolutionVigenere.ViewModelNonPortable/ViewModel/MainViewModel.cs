@@ -69,11 +69,23 @@ namespace ResolutionVigenere.View.ViewModel
 
         public bool CanSearchKeys()
         {
-            return VigenereText.KeyLength > 0 && !string.IsNullOrWhiteSpace(VigenereText.CryptedText) && VigenereText.CryptedText.Length > VigenereText.KeyLength;
+            if (VigenereText.KnowingKeyLength && VigenereText.KeyLength <= 0)
+                return false;
+
+            return !string.IsNullOrWhiteSpace(VigenereText.CryptedText) && VigenereText.CryptedText.Length > VigenereText.KeyLength;
         }
         public void SearchKeys()
         {
-            // Step 1 : TODO : Get the probably length of the key
+            if (!VigenereText.KnowingKeyLength)
+            {
+                // Step 1 : Get the probably length of the key (if we don't know it)
+
+                // Get the "espace repetition" on the crypted text
+                var espaceRepetitions = GetEspacesRepetition(VigenereText.CryptedText);
+
+                // Get the PGCD on all of these values - that's the KeyLength
+                VigenereText.KeyLength = PGCD(espaceRepetitions);
+            }
 
             // Step 2 : Get potential keys from the probably letters on each series
             // as many as then length of the key
@@ -126,6 +138,58 @@ namespace ResolutionVigenere.View.ViewModel
             VigenereText.ClearedText = clearedTextBuilder.ToString();
         }
 
+        private IList<int> GetEspacesRepetition(string cryptedText)
+        {
+            var espaceRepetitions = new List<int>();
+
+            for (int i = 20; i > 2; i--)
+            {
+                for (int j = 0; j < cryptedText.Length - i; j++)
+                {
+                    string possibleRepetition = cryptedText.Substring(j, i);
+
+                    var repetitions = cryptedText.Split(new[] {possibleRepetition}, StringSplitOptions.RemoveEmptyEntries);
+                    if (repetitions.Count() > 2)
+                        espaceRepetitions.Add(repetitions[1].Length + i);
+                }
+            }
+
+            return espaceRepetitions;
+        }
+
+        private int PGCD(IList<int> values)
+        {
+            // Case 1 : no values
+            if (values == null || !values.Any())
+                return 1;
+
+            int numberValues = values.Count();
+
+            // Case 2 : only one value
+            if (numberValues == 1)
+                return values.First();
+
+            // Case 3 : two values or more (so PGCD of these values)
+            int pgcd = PGCD(values[0], values[1]);
+
+            for (int i = 2; i < numberValues; i++)
+                pgcd = PGCD(pgcd, values[i]);
+
+            return pgcd;
+        }
+
+        private int PGCD(int value1, int value2)
+        {
+            while (value1 != value2)
+            {
+                if (value1 > value2)
+                    value1 -= value2;
+                else
+                    value2 -= value1;
+            }
+
+            return value1;
+        }
 
         private IEnumerable<string> GetKeys(string startKey)
         {

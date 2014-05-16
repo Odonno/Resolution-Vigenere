@@ -26,6 +26,8 @@
                      TextWrapping="Wrap" CharacterCasing="Upper" AcceptsReturn="True" />
             
             <StackPanel Grid.Row="2" Orientation="Horizontal">
+                <TextBlock Text="Knowing key length ?" Margin="10" />
+                <CheckBox IsChecked="{Binding Path=VigenereText.KnowingKeyLength}" VerticalAlignment="Center" />
                 <TextBlock Text="Key length :" Margin="10" />
                 <TextBox x:Name="tbKeyLength" Text="{Binding Path=VigenereText.KeyLength, UpdateSourceTrigger=PropertyChanged}" 
                          Margin="0 10" Width="50" HorizontalAlignment="Left" />

@@ -12,6 +12,13 @@ namespace ResolutionVigenere.ModelNonPortable
             set { _cryptedText = value; RaisePropertyChanged("CryptedText"); }
         }
 
+        private bool _knowingKeyLength;
+        public bool KnowingKeyLength
+        {
+            get { return _knowingKeyLength; }
+            set { _knowingKeyLength = value; RaisePropertyChanged("KnowingKeyLength"); }
+        }
+
         private int _keyLength;
         public int KeyLength
         {

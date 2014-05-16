@@ -73,13 +73,17 @@ namespace ResolutionVigenere.View.ViewModel
         }
         public void SearchKeys()
         {
+            // Step 1 : TODO : Get the probably length of the key
+
+            // Step 2 : Get potential keys from the probably letters on each series
+            // as many as then length of the key
             VigenereText.PotentialKeys.Clear();
 
             _occurenceList = new List<OccurenceLetter>(VigenereText.KeyLength);
             for (int i = 0; i < VigenereText.KeyLength; i++)
                 _occurenceList.Add(new OccurenceLetter());
 
-            // Get occurence list of each serie
+            // Step 2a : Get occurence list of each serie
             int j = 0;
 
             foreach (var serie in GetSeries())
@@ -90,7 +94,7 @@ namespace ResolutionVigenere.View.ViewModel
                 j++;
             }
 
-            // Get the potential keys from these lists
+            // Step 2b : Get the potential keys from these lists
             var keys = GetKeys("");
 
             foreach (var key in keys)
@@ -104,6 +108,7 @@ namespace ResolutionVigenere.View.ViewModel
         }
         public void Decrypt()
         {
+            // for each letter, we search the cleared letter from crypted AND key letter
             var clearedTextBuilder = new StringBuilder();
             int i = 0;
 
